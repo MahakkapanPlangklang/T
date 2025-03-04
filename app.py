@@ -1,14 +1,14 @@
 import joblib
 import numpy as np
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS  
 
-final_model = joblib.load("trained_voting_classifier.pkl")
+final_model = joblib.load("best_model.pkl")
 model = final_model["model"]
 label_encoders = final_model["label_encoder"]
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  
 
 @app.route("/")
 def home():
@@ -27,12 +27,11 @@ def predict():
         height = data["height"]
         weight = data["weight"]
 
-        # สร้าง feature ที่ใช้ในการทำนาย
         features = [float(age), float(height), float(weight)]
         print(f"Features: {features}")
 
         features_array = np.array([features]).reshape(1, -1)
-    
+        
         probabilities = model.predict_proba(features_array)[0]  
         
         prediction = model.predict(features_array)[0]
